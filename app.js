@@ -1,12 +1,26 @@
+var mysql = require("mysql");
 const inquirer = require('inquirer');
-// const db = require('./db');
+// const connection = require('./db/connection');
+require('console.table');
 
-const menu = () => (
+var connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "",
+    database: "employee_db"
+});
+
+connection.connect(function(err) {
+    if(err) throw err;
+});
+
+const menu = () => {
     inquirer
-    .prompt([{
+    .prompt({
         name: 'action',
         type: 'list',
-        message:'How can I help you?',
+        message: 'How can I help you?',
         choices: [
             'View departments',
             'View employees',
@@ -16,40 +30,80 @@ const menu = () => (
             'Add new employee',
             'Exit',
         ],
-    }]).then(function(click) {
-        switch(click.choices){
+    })
+    .then(function(clicked) {
+        console.log(clicked);
+        switch (clicked.action) {
             case 'View departments':
                 viewDepartments();
-            break;
-            
+                break;
+
             case 'View employees':
                 viewEmployees();
-            break;
+                break;
 
             case 'View roles':
                 viewRoles();
-            break;
-            
+                break;
+
             case 'Add new role':
                 addRoles();
-            break;
+                break;
 
             case 'Add new department':
                 addDepartment();
-            break;
+                break;
 
             case 'Add new department':
                 addDepartment();
-            break;
+                break;
 
             case 'Add new employee':
                 addEmployee();
-            break;
+                break;
 
             case 'Exit':
                 endConnect();
-            break;
+                break;
         }
-    })
-);
-menu();
+    });
+};
+menu(); 
+
+
+function viewDepartments() {
+    connection.query("SELECT * FROM department", function(err, clicked) {
+      console.log("\n Departments Retrieved from Database \n");
+      console.table(clicked);
+    });
+    menu();
+  }
+
+  function viewEmployees() {
+    console.log("retrieving employess from database");
+    var fancyQuery =
+      "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;";
+    connection.query(fancyQuery, function(err, clicked) {
+      console.log("\n Employees retrieved from Database \n");
+      console.table(clicked);
+    });
+    menu();
+  }
+// function viewEmployees() {
+//     const query = 'SELECT * FROM employee';
+//     connection.query(query, function(err, res){
+//         if(err) throw err;
+//         console.log(res.length + 'employee here steve');
+//         console.table('All Employees:', res);
+//         // menu();
+//     })
+// };
+
+// function viewDepartments() {
+//     const query = "SELECT * FROM department";
+//     connection.query(query, (err, test) => {
+//         if(err) throw err;
+//         console.table(test);
+//         // menu();
+//     })
+// }

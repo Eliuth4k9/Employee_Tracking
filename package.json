@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Eliuth4k9/Employee_Tracking#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
     "mysql": "^2.18.1",
     "paths": "^0.1.1"

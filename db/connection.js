@@ -1,17 +1,21 @@
-'use strict';
-var mysql = require("mysql");
-const util = require('util');
+// 'use strict';
+// var mysql = require("mysql");
+// const util = require('util');
+// const table = require('console.table');
 
 
-var connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "",
-    database: ""
-});
+// var connection = mysql.createConnection({
+//     host: "localhost",
+//     port: 3306,
+//     user: "root",
+//     password: "$",
+//     database: "employee_db"
+// });
 
-connection.connect();
-connection.query = util.promisify(connection.query);
+// connection.connect(function(err) {
+//     if(err) throw err;
+//     menu();
+// });
+// connection.query = util.promisify(connection.query);
 
-module.exports = connection;
+// module.exports = connection;
