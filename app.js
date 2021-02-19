@@ -131,8 +131,8 @@ function addEmployee() {
             }
         ]).then(function(answer) {
             var roleID;
-            for(let k = 0; a < res.length; k++){
-                if(res[k].role_title == answer.roles){
+            for(let k = 0; k < res.length; k++){
+                if(res[k].role_title == answer.role){
                     roleID = res[k].id;
                     console.log(roleID)
                 }
@@ -143,7 +143,7 @@ function addEmployee() {
                     first_name: answer.first_name,
                     last_name: answer.last_name,
                     manager_id: answer.manager_id,
-                    role_id: roleID,
+                    role_id: roleID
 
                 },
                 function(err) {
