@@ -96,3 +96,67 @@ function viewRoles() {
         menu();
     })
 }
+
+function addEmployee() {
+    connection.query('SELECT * FROM roles', function(err, res){
+        if(err) throw err;
+        inquirer
+        .prompt([
+            {
+                name:'first_name',
+                type: 'input',
+                message: 'Please enter your first name'
+            },
+            {
+                name:'last_name',
+                type: 'input',
+                message: 'Please enter your last name'
+            },
+            {
+                name:'last_name',
+                type: 'input',
+                message: 'Please enter your last name'
+            },
+            {
+                name:'manager_id',
+                type: 'input',
+                message: 'What is the id for your manager?'
+            },
+            {
+                name:'roles',
+                type:'list',
+                choices: function() {
+                    var roleArr = [];
+                    for(let i = 0; i < res.length; i++) {
+                        roleArr.push(res[i].title);
+                    }
+                    return roleArr;
+                },
+                message:'What is your role?'
+            }
+        ]).then(function(kite) {
+            let roleID;
+            for(let i = 0; i < res.length; i++){
+                if(res[i].title == answer.roles){
+                    roleID = res[i].id;
+                    console.log(roleID)
+                }
+            }
+            connection.query(
+                "INSERT INTO employees SET ?",
+                {
+                    first_name: kite.first_name,
+                    last_name: kite.last_name,
+                    manager_id: kite.manager_id,
+                    role_id: roleID,
+
+                },
+                function(err) {
+                    if(err) throw err;
+                    console.log('test test test added employee');
+                    menu();
+                }
+            )
+        })
+    })
+}
