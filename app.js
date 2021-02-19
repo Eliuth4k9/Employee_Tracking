@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "Hotdudelife26$",
+    password: "$",
     database: "employee_db"
 })
 connection.connect(function(err){
@@ -123,7 +123,7 @@ function addEmployee() {
                 choices: function() {
                     var roleArr = [];
                     for(let i = 0; i < res.length; i++) {
-                        roleArr.push(res[i].title);
+                        roleArr.push(res[i].role_title);
                     }
                     return roleArr;
                 },
@@ -132,7 +132,7 @@ function addEmployee() {
         ]).then(function(answer) {
             var roleID;
             for(let a = 0; a < res.length; a++){
-                if(res[a].title == answer.roles){
+                if(res[a].role_title == answer.roles){
                     roleID = res[a].id;
                     console.log(roleID)
                 }
@@ -160,15 +160,15 @@ function addDepartment() {
     inquirer
     .prompt([
         {
-            name: "departments", 
             type: "input", 
+            name: "department_name", 
             message: "What is the new department you would like to add?"
         }
     ]).then(function (answer) {
         connection.query(
             'INSERT INTO departments SET ?',
             {
-                name: answer.departments
+                department_name : answer.department_name,
             }
         );
           var query = 'SELECT * FROM departments';
