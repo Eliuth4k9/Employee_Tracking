@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "$",
+    password: "Hotdudelife26$",
     database: "employee_db"
 })
 connection.connect(function(err){
@@ -113,17 +113,12 @@ function addEmployee() {
                 message: 'Please enter your last name'
             },
             {
-                name:'last_name',
-                type: 'input',
-                message: 'Please enter your last name'
-            },
-            {
                 name:'manager_id',
                 type: 'input',
                 message: 'What is the id for your manager?'
             },
             {
-                name:'roles',
+                name:'role',
                 type:'list',
                 choices: function() {
                     var roleArr = [];
@@ -134,20 +129,20 @@ function addEmployee() {
                 },
                 message:'What is your role?'
             }
-        ]).then(function(kite) {
-            let roleID;
-            for(let i = 0; i < res.length; i++){
-                if(res[i].title == answer.roles){
-                    roleID = res[i].id;
+        ]).then(function(answer) {
+            var roleID;
+            for(let a = 0; a < res.length; a++){
+                if(res[a].title == answer.roles){
+                    roleID = res[a].id;
                     console.log(roleID)
                 }
             }
             connection.query(
-                "INSERT INTO employees SET ?",
+                'INSERT INTO employees SET ?',
                 {
-                    first_name: kite.first_name,
-                    last_name: kite.last_name,
-                    manager_id: kite.manager_id,
+                    first_name: answer.first_name,
+                    last_name: answer.last_name,
+                    manager_id: answer.manager_id,
                     role_id: roleID,
 
                 },
@@ -157,6 +152,30 @@ function addEmployee() {
                     menu();
                 }
             )
+        })
+    })
+}
+
+function addDepartment() {
+    inquirer
+    .prompt([
+        {
+            name: "departments", 
+            type: "input", 
+            message: "What is the new department you would like to add?"
+        }
+    ]).then(function (answer) {
+        connection.query(
+            'INSERT INTO departments SET ?',
+            {
+                name: answer.departments
+            }
+        );
+          var query = 'SELECT * FROM departments';
+        connection.query(query, function(err, res) {
+        if(err)throw err;
+        console.table('Departments:', res);
+        menu();
         })
     })
 }
