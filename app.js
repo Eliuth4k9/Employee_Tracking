@@ -70,7 +70,7 @@ const menu = () => {
 }
 
 function viewDepartments() {
-    var query = "SELECT * FROM departments";
+    var query = 'SELECT * FROM departments';
     connection.query(query, function(err, res) {
     if(err)throw err;
     console.table('View Departments:', res);
@@ -79,11 +79,20 @@ function viewDepartments() {
 }
 
 function viewEmployees() {
-    var query = "SELECT * FROM employees";
+    var query = 'SELECT * FROM employees';
     connection.query(query, function(err, res) {
     if (err) throw err;
-    console.log(res.length + " employee data is here!");
-    console.table('View Employees:', res); 
+    console.log(res.length + 'employee data is here!');
+    console.table('View employees:', res); 
     menu();
+    })
+}
+
+function viewRoles() {
+    var query = 'SELECT * FROM roles';
+    connection.query(query, function(err, res){
+        if(err) throw err;
+        console.table('View roles', res);
+        menu();
     })
 }
