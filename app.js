@@ -131,9 +131,9 @@ function addEmployee() {
             }
         ]).then(function(answer) {
             var roleID;
-            for(let a = 0; a < res.length; a++){
-                if(res[a].role_title == answer.roles){
-                    roleID = res[a].id;
+            for(let k = 0; a < res.length; k++){
+                if(res[k].role_title == answer.roles){
+                    roleID = res[k].id;
                     console.log(roleID)
                 }
             }
@@ -162,7 +162,7 @@ function addDepartment() {
         {
             type: "input", 
             name: "department_name", 
-            message: "What is the new department you would like to add?"
+            message: "Name of new department you would like to add."
         }
     ]).then(function (answer) {
         connection.query(
@@ -178,4 +178,59 @@ function addDepartment() {
         menu();
         })
     })
+}
+function addRoles() {
+    connection.query('SELECT * FROM departments', function(err, res) {
+        if(err) throw err;
+        inquirer
+.prompt([
+    {
+        name: "NewRole",
+        type: "input", 
+        message: "What new role do you have in mind boss?"
+    },
+    {
+        name: "salary",
+        type: "input", 
+        message: "How much money does this position make in a year?"
+    },
+    {
+        name: "departments",
+        type: "list", 
+        choices: function() {
+            var departmentArr = [];
+            for(let i = 0; i < res.length; i++) {
+                departmentArr.push(res[i].department_name);
+            }
+            return departmentArr;
+        },
+    }
+]).then(function(answer) {
+    var apartID;
+    for(let k = 0; k < res.length; k++) {
+        if(res[k].department_name == answer.departments) {
+            apartID = res[k].id;
+        }
+    }
+    connection.query(
+        'INSERT INTO roles SET ?',
+        {
+            role_title: answer.NewRole,
+            salary: answer.salary,
+            department_id: apartID
+        },
+        function(err,res) {
+            if(err, res)
+            console.log("Test test test role added!");
+                console.table('View roles', res);
+                menu();
+            })
+        })
+    })
+}
+
+function endConnect() {
+    console.log('goodbye!')
+    console.table('Have a good day and take care of yourself!');
+    connection.end()
 }
