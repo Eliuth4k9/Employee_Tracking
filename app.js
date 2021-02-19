@@ -1,19 +1,18 @@
-var mysql = require("mysql");
 const inquirer = require('inquirer');
-// const connection = require('./db/connection');
-require('console.table');
+const mysql = require("mysql");
+const table = require('console.table');
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "",
+    password: "$",
     database: "employee_db"
-});
-
-connection.connect(function(err) {
-    if(err) throw err;
-});
+})
+connection.connect(function(err){
+    if ('I am online', err) throw err;
+    menu();
+})
 
 const menu = () => {
     inquirer
@@ -29,11 +28,10 @@ const menu = () => {
             'Add new department',
             'Add new employee',
             'Exit',
-        ],
-    })
-    .then(function(clicked) {
-        console.log(clicked);
-        switch (clicked.action) {
+        ]
+    }).then(function(picked) {
+        console.log(picked);
+        switch (picked.action) {
             case 'View departments':
                 viewDepartments();
                 break;
@@ -65,45 +63,27 @@ const menu = () => {
             case 'Exit':
                 endConnect();
                 break;
+            default:
+                break;
         }
-    });
-};
-menu(); 
-
+    })
+}
 
 function viewDepartments() {
-    connection.query("SELECT * FROM department", function(err, clicked) {
-      console.log("\n Departments Retrieved from Database \n");
-      console.table(clicked);
-    });
+    var query = "SELECT * FROM departments";
+    connection.query(query, function(err, res) {
+    if(err)throw err;
+    console.table('View Departments:', res);
     menu();
-  }
+    })
+}
 
-  function viewEmployees() {
-    console.log("retrieving employess from database");
-    var fancyQuery =
-      "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;";
-    connection.query(fancyQuery, function(err, clicked) {
-      console.log("\n Employees retrieved from Database \n");
-      console.table(clicked);
-    });
+function viewEmployees() {
+    var query = "SELECT * FROM employees";
+    connection.query(query, function(err, res) {
+    if (err) throw err;
+    console.log(res.length + " employee data is here!");
+    console.table('View Employees:', res); 
     menu();
-  }
-// function viewEmployees() {
-//     const query = 'SELECT * FROM employee';
-//     connection.query(query, function(err, res){
-//         if(err) throw err;
-//         console.log(res.length + 'employee here steve');
-//         console.table('All Employees:', res);
-//         // menu();
-//     })
-// };
-
-// function viewDepartments() {
-//     const query = "SELECT * FROM department";
-//     connection.query(query, (err, test) => {
-//         if(err) throw err;
-//         console.table(test);
-//         // menu();
-//     })
-// }
+    })
+}
